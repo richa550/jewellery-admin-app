@@ -15,7 +15,14 @@ router.post("/signup", async (req, res) => {
     const newUser = new User({ name, contact, email, password: hashedPassword });
     await newUser.save();
 
-    res.json({ msg: "Signup successful" , user: { name: newUser.name, contact: newUser.contact, email: newUser.email } });
+    // Optional: issue token here if you want auto-login
+    // const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: "30m" });
+
+    res.json({ 
+      msg: "Signup successful",
+      user: { id: newUser._id, name: newUser.name, contact: newUser.contact, email: newUser.email }
+      // , token
+    });
   } catch (err) {
     console.error("Signup error:", err);
     res.status(500).json({ error: err.message });
@@ -32,8 +39,11 @@ router.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
-    res.json({ token, user: { id: user._id, name: user.name, contact: user.contact, email: user.email } });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "30m" }); // keep expiry consistent
+    res.json({ 
+      token,
+      user: { id: user._id, name: user.name, contact: user.contact, email: user.email }
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

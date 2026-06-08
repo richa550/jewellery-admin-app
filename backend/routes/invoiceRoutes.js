@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const Invoice = require("../models/Invoice");
-const jwt = require("jsonwebtoken");
+const auth = require("../middleware/auth"); // ✅ use middleware
+
 
 // Middleware for auth
 function auth(req, res, next) {
@@ -61,6 +62,11 @@ router.get("/", auth, async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+// Example protected route
+router.get("/protected", auth, (req, res) => {
+  res.json({ message: "Only logged-in users can see this" });
 });
 
 module.exports = router;
