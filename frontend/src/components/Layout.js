@@ -9,7 +9,7 @@ function Layout({ children }) {
       {/* Header */}
       <AppBar position="static">
         <Toolbar sx={{ justifyContent: "space-between" }}>
-          <Typography variant="h6">Jewellery App</Typography>
+          <Typography variant="h6">User App</Typography>
           <Box>
             <Navbar />
           </Box>
